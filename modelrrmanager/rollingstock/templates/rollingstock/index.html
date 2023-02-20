@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Fleet Management</title>
+    </head>
+    <body>
+        <h1>Fleet Management</h1>
+        {% if road_listed_vehicles %}
+        <ul>
+            {% for vehicle in road_listed_vehicles %}
+                <li><a href="/rollingstock/{{ vehicle.id }}/">
+                    {{vehicle.reporting_mark}} {{vehicle.id_number}} - {{vehicle.aar_type}} ({{vehicle.cargo}})
+                </a></li>
+            {% endfor %}    
+        </ul>
+        {% else %}
+            <p>No vehicles are available</p>
+        {% endif %}
+    </body>
+</html>
