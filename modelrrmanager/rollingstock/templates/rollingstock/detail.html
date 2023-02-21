@@ -1,10 +1,44 @@
 <html>
 <head>
     <title>{{vehicle.reporting_mark}} {{vehicle.id_number}}</title>
+    <style>
+        table, th, td {
+            text-align: left;
+            border: 1px solid;
+          }
+    </style>
 </head>
 <body>
     <h1>{{vehicle.reporting_mark}} {{vehicle.id_number}}</h1>
-    <img src={{vehicle.img_url}}>
-    {{ vehicle }}
+    <h2>Current Location: {{location}}</h2>
+    {% load static %}
+    <img src="../../rollingstock/{{vehicle.img_url}}" alt="Vehicle Image">
+    <br><br>
+    <table>
+        <tr>
+            <th><h3>Field</h3></th>
+            <th><h3>Value</h3></th>
+        </tr>
+        <tr>
+            <th>AAR Type</th>
+            <th>{{vehicle.aar_type}}</th>
+        </tr>
+        <tr>
+            <th>Cargo</th>
+            <th>{{vehicle.cargo}}</th>
+        </tr>
+        <tr>
+            <th>Loaded?</th>
+            <th>{{vehicle.loaded}}</th>
+        </tr>
+        <tr>
+            <th>Last Serviced at</th>
+            <th>{{vehicle.last_loaded_unloaded}}</th>
+        </tr>
+        <tr>
+            <th>Lift?</th>
+            <th>{{vehicle.ready_for_pickup}}</th>
+        </tr>
+    </table>
 </body>
 </html>

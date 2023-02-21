@@ -2,6 +2,7 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render
 
 from .models import RailVehicle
+#from modelrrmanager.locations.models import Location
 
 def index(request):
     road_listed_vehicles = RailVehicle.objects.order_by('reporting_mark','id_number')
@@ -16,7 +17,11 @@ def index(request):
 def detail(request, r_stock_id):
     try: 
         vehicle = RailVehicle.objects.get(pk=r_stock_id)
+        try:
+            location = Location.objects.get(pk=vehicle.location)
+        except:
+            location = str(vehicle.location)
     except RailVehicle.DoesNotExist:
         raise Http404("Vehicle does not exist!")
-    return render(request, 'rollingstock/detail.html',{'vehicle':vehicle})
+    return render(request, 'rollingstock/detail.html',{'vehicle':vehicle,'location':location})
 
