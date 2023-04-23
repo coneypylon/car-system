@@ -49,16 +49,38 @@ class CarMovements(models.Model):
                 return 1
             else:
                 return 
-            
+
         def find_off_layout_cars(cargo,loaded,layout):
-            cmd = "SELECT * FROM cars c JOIN locations l on c.location=l.id WHERE l.macro_location <> %s AND c.cargo = '%s' AND c.loaded = %s" \
+            '''cmd = "SELECT * FROM cars c JOIN locations l on c.location=l.id WHERE l.macro_location <> %s AND c.cargo = '%s' AND c.loaded = %s" \
                         % (layout,cargo,loaded)
             cur.execute(cmd)
-            raw = cur.fetchall()
-            random.shuffle(raw)
+            raw_list_of_cars = cur.fetchall()
+            random.shuffle(raw_list_of_cars)
             out = []
-            for c in raw:
-                out.append((c[0],c[1],c[2],c[3],c[4],c[8],c[10]))
+            for car in raw_list_of_cars:
+                print(car)
+                out.append((car[0],car[1],car[2],car[3],car[4],car[8],car[10])) 
+                # ^ reporting mark, id #, AAR type, cargo, Loaded (Bool), Image URL, Current Location String
+            return out'''
+            return find_cars(cargo=cargo,loaded=loaded,layout=layout,offlayout=True)
+        
+        def find_cars(cargo='',loaded='',layout=1,offlayout=True,lifts=False):
+            if offlayout:
+                cmd = "SELECT * FROM rollingstock_railvehicle c JOIN locations l on c.location=l.id WHERE l.macro_location <> %s AND c.cargo = '%s' AND c.loaded = %s" \
+                        % (layout,cargo,loaded)
+            elif lifts:
+                cmd = "SELECT * FROM rollingstock_railvehicle c JOIN locations l on c.location=l.id WHERE c.ready_for_pickup = 1 AND l.macro_location = %s" % layout
+            cur.execute(cmd)
+            raw_list_of_cars = cur.fetchall()
+            random.shuffle(raw_list_of_cars)
+            carAttributes = ["id","reportingMark", "aarType", "cargo", "isLoaded", "locationID","lastServicedLocation",
+                             "isReady", "imageURL","idNumber", "locationID2", "locationStr","locationDescription","macroLocationID"]
+            out = []
+            for aCar in raw_list_of_cars:
+                readableDict = {}
+                for x in range(0, len(carAttributes)-1):
+                    readableDict[carAttributes[x]] = aCar[x]
+                out.append(readableDict)
             return out
 
         #def find_off_layout_cars(cargo,loaded,layout):
@@ -73,16 +95,17 @@ class CarMovements(models.Model):
 
         # Get demands from layout in question
         # might have to make this a global demand calculation
-        cur.execute("SELECT * FROM demand d JOIN locations l on d.location=l.id WHERE l.macro_location = %s" % layout)
+        cmd = "SELECT * FROM demand d JOIN locations l on d.location=l.id WHERE l.macro_location = %s" % layout
+        cur.execute(cmd)
         potential_demands = cur.fetchall()
 
         # Calculate cars requested
         demands = []
-        for d in potential_demands:
-            if d[7][day].lower() == 'y': # the industry requests something today
-                if random.random() <= d[4]: # the frequency is met
-                    numcars = random.randint(d[5],d[6])
-                    demands.append((d[9],d[1],d[2],numcars))
+        for demand in potential_demands:
+            if demand[7][day].lower() == 'y': # the industry requests something today
+                if random.random() <= demand[4]: # the frequency is met
+                    numcars = random.randint(demand[5],demand[6])
+                    demands.append((demand[9],demand[1],demand[2],numcars,demand[0]))
 
         ######################
         #                    #
@@ -91,12 +114,13 @@ class CarMovements(models.Model):
         ######################
 
         # Find cars to be picked up
-        cur.execute("SELECT * FROM cars c JOIN locations l on c.location=l.id WHERE c.ready_for_pickup = 1 AND l.macro_location = %s" % layout)
-        lifts_raw = cur.fetchall()
-        lifts = []
+        #cur.execute("SELECT * FROM cars c JOIN locations l on c.location=l.id WHERE c.ready_for_pickup = 1 AND l.macro_location = %s" % layout)
+        #lifts_raw = cur.fetchall()
+        lifts = find_cars(layout=layout,lifts=True,offlayout=False)
 
-        for c in lifts_raw:
-            lifts.append((c[0],c[1],c[2],c[3],c[4],c[8],c[10]))
+        #for car in lifts_raw:
+        #    lifts.append((car[0],car[1],car[2],car[3],car[4],car[8],car[10]))
+            # ^ reporting mark, id #, AAR type, cargo, Loaded (Bool), Image URL, Current Location String
 
         ######################
         #                    #
@@ -111,17 +135,17 @@ class CarMovements(models.Model):
         on_layout_moves = []
         off_layout_moves = []
 
-        for d in demands:
-            rem_dem = d[3] # Remaning Demand - the number of cars remaining for this demand
-            for c in lifts:
-                if rem_dem > 0 and c[0]+str(c[1]) not in used_cars.keys() and c[3] == d[1] and c[4] == d[2]: # still need cars, car is unused, same cargo and stats
-                    used_cars[c[0]+str(c[1])] = (c[6],d[0])
+        for demand in demands: # demand = Name, cargo, want loaded, number of cars, LocationID
+            rem_dem = demand[3] # Remaning Demand - the number of cars remaining for this demand
+            for car in lifts:
+                if rem_dem > 0 and car["reportingMark"]+str(car["idNumber"]) not in used_cars.keys() and car["cargo"] == demand[1] and car["isLoaded"] == demand[2]: # still need cars, car is unused, same cargo and stats
+                    used_cars[car["reportingMark"]+str(car["idNumber"])] = (car["locationStr"],demand[0],demand[4])
                     rem_dem -= 1
             # ok, let's grab something off-layout
-            pot_cars = find_off_layout_cars(d[1],d[2],layout)
-            for c in pot_cars:
-                if rem_dem > 0 and c[0]+str(c[1]) not in used_cars.keys() and c[3] == d[1] and c[4] == d[2]: # still need cars, car is unused, same cargo and stats
-                    used_cars[c[0]+str(c[1])] = (c[6],d[0])
+            pot_cars = find_off_layout_cars(demand[1],demand[2],layout)
+            for car in pot_cars:
+                if rem_dem > 0 and car["reportingMark"]+str(car["idNumber"]) not in used_cars.keys() and car["cargo"] == demand[1] and car["isLoaded"] == demand[2]: # still need cars, car is unused, same cargo and stats
+                    used_cars[car["reportingMark"]+str(car["idNumber"])] = (car["locationStr"],demand[0],demand[4])
                     rem_dem -= 1
 
         return used_cars
