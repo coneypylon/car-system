@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>Model RR Manager</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#generate').click(function() {
+                    $.ajax({
+                        url: '/generate/',
+                        type: 'POST',
+                        data: {},
+                        success: function(response) {
+                            // Update the list of car movements in the HTML
+                            var carMovementsList = response.car_movements_list;
+                            var listHTML = '';
+                            for (var i = 0; i < carMovementsList.length; i++) {
+                                var movement = carMovementsList[i];
+                                listHTML += '<li>' + movement.car_type + ' ' + movement.direction + '</li>';
+                            }
+                            $('#car-movements-list').html(listHTML);
+                        },
+                        error: function(response) {
+                            // Handle error response
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Model RR Management</h1>
+        <h2>Summary:</h2>
+    </h3>{{ RR_summary }}</h3>
+    <h2>Actions:</h2>
+    <button id="generate">Generate new set of movements</button>
+    <ul id="car-movements-list">
+        {% for movement in car_movements_list %}
+            <li>{{ movement.car_type }} {{ movement.direction }}</li>
+        {% endfor %}
+    </ul>
+</html>
