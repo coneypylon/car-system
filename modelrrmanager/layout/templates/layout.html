@@ -1,0 +1,15 @@
+{% block content %}
+    <h1>Rolling Stock</h1>
+    <ul>
+        {% for vehicle in rolling_stock %}
+            <li>{{ vehicle.reporting_mark }} {{ vehicle.id_number }} - {{ vehicle.aar_type }} ({{ vehicle.cargo }})</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Locations</h1>
+    <ul>
+        {% for location in locations %}
+            <li>{{ location.name }} - {{ location.description }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

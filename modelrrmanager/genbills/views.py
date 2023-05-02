@@ -26,12 +26,12 @@ def executeCarMovement(request):
     if request.method == 'POST':
         # send movements to be executed one by one
         data_dict = QueryDict(request.body)
-        print(data_dict)
+        #print(data_dict)
         for car_id, values in data_dict.items():
             first_four = car_id[:4]
             last_six = car_id[4:10]
-            print(first_four+last_six)
-            print(values)
+            #print(first_four+last_six)
+            #print(values)
             destination = values[0]
             # we should probably understand if the car is being loaded or unloaded at this point
             # I'm going to hardcode to always service the car so that the execute function
