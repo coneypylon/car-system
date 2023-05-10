@@ -1,15 +1,65 @@
-{% block content %}
-    <h1>Rolling Stock</h1>
-    <ul>
-        {% for vehicle in rolling_stock %}
-            <li>{{ vehicle.reporting_mark }} {{ vehicle.id_number }} - {{ vehicle.aar_type }} ({{ vehicle.cargo }})</li>
-        {% endfor %}
-    </ul>
-
-    <h1>Locations</h1>
-    <ul>
-        {% for location in locations %}
-            <li>{{ location.name }} - {{ location.description }}</li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% load layoutextras %}
+	<title>Locations</title>
+	<style>
+		/* Center content */
+		body {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100%; /* calc(100vh - 100px); */
+			margin: 0;
+		}
+		/* Header */
+		header {
+			background-color: #333;
+			color: #fff;
+			padding: 1rem;
+			width: 100%;
+			text-align: center;
+		}
+		/* Footer */
+		footer {
+			background-color: #333;
+			color: #fff;
+			padding: 1rem;
+			width: 100%;
+			text-align: center;
+			position: absolute;
+			bottom: 0;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<nav>
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">Contact</a></li>
+			</ul>
+		</nav>
+	</header>
+	<main>
+		<h1>Locations</h1>
+		<ul>
+            {% for location in locations %}
+            <li>{{ location.name }} - {{ location.description }}
+                <h2>Rolling Stock</h2>
+                <ul>
+                    {% for vehicle in rolling_stock_by_location|get_item:location.id %}
+                        <li>{{ vehicle.reporting_mark }} {{ vehicle.id_number }} - {{ vehicle.aar_type }} ({{ vehicle.cargo }})</li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+		</ul>
+	</main>
+	<footer>
+		<p>&copy; 2023 Rolling Stock Inc.</p>
+	</footer>
+</body>
+</html>

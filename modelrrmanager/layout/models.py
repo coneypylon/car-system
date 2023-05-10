@@ -26,6 +26,7 @@ class Location:
 class Layout(models.Model):
     id = models.CharField(max_length=12,primary_key=True)
     name = models.CharField(max_length=32)
+    locations = {}
     
     def ListLocations(self):
         cur = connection(global_db)
@@ -33,9 +34,17 @@ class Layout(models.Model):
         locations = {}
         for location in cur.fetchall():
             locations[location[0]] = Location(location[0],location[1],location[2],location[3])
-        return locations 
+        return locations
     
     def ListRollingStock(self):
         possible_locations = self.ListLocations()
-        allVehicles = RailVehicle.objects.filter(location__in=possible_locations.keys())
-        return allVehicles
+        lst_of_keys = list(possible_locations.keys())
+        allVehicles = RailVehicle.objects.filter(location__in=lst_of_keys)
+        return list(allVehicles)
+    
+    def ListRollingStockByLocation(self):
+        possible_locations = self.ListLocations()
+        rolling_stock_by_location = {}
+        for location_id in possible_locations:
+            rolling_stock_by_location[location_id] = list(RailVehicle.objects.filter(location=location_id))
+        return rolling_stock_by_location
