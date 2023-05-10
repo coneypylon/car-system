@@ -5,8 +5,6 @@ def layout(request):
     laynum = 1 # gotta change this
     layout = Layout.objects.get(id=laynum)
     rolling_stock_by_location = layout.ListRollingStockByLocation()
-    print(rolling_stock_by_location)
     locations = list(layout.ListLocations().values())
-    print(locations)
     context = {'rolling_stock_by_location': rolling_stock_by_location, 'locations': locations, 'layout':layout}
     return render(request, 'layout.html', context)

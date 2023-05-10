@@ -30,7 +30,6 @@ class CarMovements(models.Model):
     
 
     def generate(self):
-        print("hello")
         # Constants - we'll eventually need to get these from the user
         db = "KitchenerSub.db"
         layout = 1
@@ -88,7 +87,6 @@ class CarMovements(models.Model):
                 cmd = "SELECT * FROM demand d JOIN locations l on d.location=l.id WHERE l.macro_location %s %s AND d.cargo = '%s'" % ("<>", layout, cargo)
             else:
                 cmd = "SELECT * FROM demand d JOIN locations l on d.location=l.id WHERE l.macro_location %s %s AND d.cargo = '%s'" % ("=", layout, cargo)
-            print(cmd)
             cur.execute(cmd)
             potential_demands = cur.fetchall()
             demands = []
