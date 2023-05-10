@@ -1,6 +1,35 @@
 <html>
     <head>
         <title>Model RR Manager</title>
+        <style>
+            /* Center content */
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                /*min-height: 50%;  calc(100vh - 100px); */
+                margin: 0;
+            }
+            /* Header */
+            header {
+                background-color: #333;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+            /* Footer */
+            footer {
+                background-color: #333;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
+                position: absolute;
+                bottom: 0;
+            }
+        </style>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -43,15 +72,27 @@
         </script>
     </head>
     <body>
-        <h1>Model RR Management</h1>
-        <h2>Summary:</h2>
-    </h3>{{ RR_summary }}</h3>
-    <h2>Actions:</h2>
-    <button id="generate">Generate new set of movements</button>
-    <ul id="car-movements-list">
-        {% for movement in car_movements_list %}
-            <li>{{ movement.car_type }} {{ movement.direction }}</li>
-        {% endfor %}
-    </ul>
-    <button id="execute">Execute above set of movements</button>
+        <header>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/layout">Layout View</a>
+                <a href="#">Contact</a>
+            </nav>
+        </header>
+        <main>
+            <h1>Model RR Management</h1>
+            <h2>Summary:</h2>
+            </h3>{{ RR_summary }}</h3>
+            <h2>Actions:</h2>
+            <button id="generate">Generate new set of movements</button>
+            <ul id="car-movements-list">
+                {% for movement in car_movements_list %}
+                    <li>{{ movement.car_type }} {{ movement.direction }}</li>
+                {% endfor %}
+            </ul>
+            <button id="execute">Execute above set of movements</button>
+        </main>
+        <footer>
+            <p>&copy; 2023 Rolling Stock Inc.</p>
+        </footer>
 </html>

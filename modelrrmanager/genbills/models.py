@@ -82,6 +82,23 @@ class CarMovements(models.Model):
                     readableDict[carAttributes[x]] = aCar[x]
                 out.append(readableDict)
             return out
+        
+        def findDestinationForCargo(cargo,layout,offlayout=True):
+            if offlayout:
+                cmd = "SELECT * FROM demand d JOIN locations l on d.location=l.id WHERE l.macro_location %s %s AND d.cargo = '%s'" % ("<>", layout, cargo)
+            else:
+                cmd = "SELECT * FROM demand d JOIN locations l on d.location=l.id WHERE l.macro_location %s %s AND d.cargo = '%s'" % ("=", layout, cargo)
+            print(cmd)
+            cur.execute(cmd)
+            potential_demands = cur.fetchall()
+            demands = []
+            for demand in potential_demands:
+                if demand[7][day].lower() == 'y': # the industry requests something today
+                    if random.random() <= demand[4]: # the frequency is met
+                        demands.append((demand[9],demand[0]))
+            random.shuffle(demands)
+            return demands[0]
+
 
         #def find_off_layout_cars(cargo,loaded,layout):
         #    RailVehicle.#figure this out
@@ -147,6 +164,11 @@ class CarMovements(models.Model):
                 if rem_dem > 0 and car["reportingMark"]+str(car["idNumber"]) not in used_cars.keys() and car["cargo"] == demand[1] and car["isLoaded"] == demand[2]: # still need cars, car is unused, same cargo and stats
                     used_cars[car["reportingMark"]+str(car["idNumber"])] = (car["locationStr"],demand[0],demand[4])
                     rem_dem -= 1
+
+        for car in lifts:
+            if car["reportingMark"]+str(car["idNumber"]) not in used_cars.keys():
+                destination, destination_id = findDestinationForCargo(car["cargo"],layout)
+                used_cars[car["reportingMark"]+str(car["idNumber"])] = (car["locationStr"],destination,destination_id)
 
         return used_cars
 
