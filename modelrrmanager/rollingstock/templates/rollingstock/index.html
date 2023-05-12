@@ -1,9 +1,63 @@
 <html>
     <head>
         <title>Fleet Management</title>
+        <style>
+            /* Center content */
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                /*min-height: 50%;  calc(100vh - 100px); */
+                margin: 0;
+            }
+            /* Header */
+            header {
+                background-color: #333;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
+            }
+            header a {
+                color: white;
+            }
+            /* Footer */
+            footer {
+                background-color: #333;
+                color: #fff;
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
+                position: absolute;
+                bottom: 0;
+            }
+            button {
+                background-color: #757575;
+                border: 2px solid black;
+                border-radius: 4px;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+              }
+        </style>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
-        <h1>Fleet Management</h1>
+        <header>
+            <nav>
+                <a href="/">Car Forwarding</a>
+                <a href="/layout">Layout View</a>
+                <a href="/rollingstock">Rolling Stock</a>
+            </nav>
+        </header>
+        <main>
+            <h1>Fleet Management</h1>
         {% if road_listed_vehicles %}
         <ul>
             {% for vehicle in road_listed_vehicles %}
@@ -15,5 +69,8 @@
         {% else %}
             <p>No vehicles are available</p>
         {% endif %}
-    </body>
+        </main>
+        <footer>
+            <p>&copy; 2023 Rolling Stock Inc.</p>
+        </footer>
 </html>
