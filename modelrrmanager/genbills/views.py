@@ -7,10 +7,14 @@ import csv
 
 from .models import CarMovements
 from rollingstock.models import RailVehicle
+from layout.models import Layout
 
 def index(request):
+    laynum = 1 # gotta change this
+    layout = Layout.objects.get(id=laynum)
+    cars = layout.ListRollingStock()
     context = {
-        "RR_summary": "uello", # TODO: Layout summary
+        "RR_summary": "There are currently %s cars on the layout, with %s ready to be lifted" % (len(cars),len(cars)),
     }
     return render(request, 'genbills/index.html', context)
 
