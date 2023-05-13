@@ -27,13 +27,10 @@ def download_movements(request):
         data_dict = json.loads(request.body)
     elif request.content_type == 'application/x-www-form-urlencoded':
         data_dict = QueryDict(request.body.decode('utf-8')).lists()
-        print(data_dict)
         data_dict = data_dict = dict((k, v) for k, v in data_dict)
-        print(data_dict)
     else:
         # Return an error response if the content type is not supported
         raise NotImplementedError
-    print(data_dict)
     # Process the data and create the CSV response
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="movements.csv"'

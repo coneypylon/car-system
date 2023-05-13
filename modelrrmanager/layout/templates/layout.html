@@ -48,8 +48,8 @@
 		<h1>Locations</h1>
 		<ul>
             {% for location in locations %}
-            <li>{{ location.name }} - {{ location.description }}
-                <h2>Rolling Stock</h2>
+            <li><h2>{{ location.name }} - {{ location.description }}</h2>
+                <h3>Rolling Stock</h3>
                 <ul>
                     {% for vehicle in rolling_stock_by_location|get_item:location.id %}
                         <li>{{ vehicle.reporting_mark }} {{ vehicle.id_number }} - {{ vehicle.aar_type }} ({{ vehicle.cargo }})</li>

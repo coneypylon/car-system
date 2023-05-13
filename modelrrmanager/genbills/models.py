@@ -57,7 +57,6 @@ class CarMovements(models.Model):
             random.shuffle(raw_list_of_cars)
             out = []
             for car in raw_list_of_cars:
-                print(car)
                 out.append((car[0],car[1],car[2],car[3],car[4],car[8],car[10])) 
                 # ^ reporting mark, id #, AAR type, cargo, Loaded (Bool), Image URL, Current Location String
             return out'''
@@ -164,9 +163,12 @@ class CarMovements(models.Model):
                     rem_dem -= 1
 
         for car in lifts:
-            if car["reportingMark"]+str(car["idNumber"]) not in used_cars.keys():
-                destination, destination_id = findDestinationForCargo(car["cargo"],layout)
-                used_cars[car["reportingMark"]+str(car["idNumber"])] = (car["locationStr"],destination,destination_id)
+            try:
+                if car["reportingMark"]+str(car["idNumber"]) not in used_cars.keys():
+                    destination, destination_id = findDestinationForCargo(car["cargo"],layout)
+                    used_cars[car["reportingMark"]+str(car["idNumber"])] = (car["locationStr"],destination,destination_id)
+            except Exception as e:
+                print(str(e))
 
         return used_cars
 

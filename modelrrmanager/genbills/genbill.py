@@ -99,7 +99,6 @@ def main():
                 used_cars[c[0]+str(c[1])] = (c[6],d[0])
                 rem_dem -= 1
 
-    print(used_cars)
 
     # Calculate trains to be built
     # not sure how to fill trains with stuff not for the layout
