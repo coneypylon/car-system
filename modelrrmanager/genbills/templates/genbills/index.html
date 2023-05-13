@@ -70,6 +70,36 @@
                         }
                     });
                 });
+                $('#download').click(function() {
+                    $.ajax({
+                        url: '/download/',
+                        type: 'POST',
+                        data: {carMovementsList},
+                        success: function(response) {
+                            // Create a blob object from the CSV content
+                            var blob = new Blob([response], {type: 'text/csv'});
+
+                            // Create a URL object from the blob
+                            var url = URL.createObjectURL(blob);
+
+                            // Create a link element to trigger the download
+                            var link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'file.csv';
+
+                            // Append the link element to the body and trigger the download
+                            document.body.appendChild(link);
+                            link.click();
+
+                            // Clean up the URL object and link element
+                            URL.revokeObjectURL(url);
+                            document.body.removeChild(link);
+                        },
+                        error: function(response) {
+                            // Handle error response
+                        }
+                    });
+                });
                 $('#execute').click(function() {
                     if (carMovementsList != ''){
                     $.ajax({
@@ -106,6 +136,7 @@
                     <li>{{ movement.car_type }} {{ movement.direction }}</li>
                 {% endfor %}
             </ul>
+            <button id="download">Download above set of movements</button>
             <button id="execute">Execute above set of movements</button>
         </main>
         <footer>
