@@ -65,6 +65,7 @@ db.sqlite3-journal
 *.png
 settings.py
 */migrations/*
+images/*
 
 # Flask stuff:
 instance/
