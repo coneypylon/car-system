@@ -1,4 +1,5 @@
 from django.http import Http404,HttpResponse, JsonResponse, QueryDict
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
@@ -9,6 +10,7 @@ from .models import CarMovements
 from rollingstock.models import RailVehicle
 from layout.models import Layout
 
+@login_required
 def index(request):
     laynum = 1 # gotta change this
     layout = Layout.objects.get(id=laynum)

@@ -22,5 +22,6 @@ urlpatterns = [
     path('',include('genbills.urls')),
     path('rollingstock/',include('rollingstock.urls')),
     path('layout/',include('layout.urls')), 
+    path('account/',include('registration.urls')), 
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
