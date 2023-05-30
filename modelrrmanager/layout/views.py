@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from .models import Layout
 
+@login_required
 def layout(request):
     laynum = 1 # gotta change this
     layout = Layout.objects.get(id=laynum)

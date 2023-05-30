@@ -1,9 +1,11 @@
 from django.http import Http404,HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from .models import RailVehicle
 #from modelrrmanager.locations.models import Location
 
+@login_required
 def index(request):
     road_listed_vehicles = RailVehicle.objects.order_by('reporting_mark','id_number')
     #output = ', '.join(str(q) for q in road_listed_vehicles)
@@ -14,6 +16,7 @@ def index(request):
     #return HttpResponse(template.render(context,request))
     return render(request, 'rollingstock/index.html', context)
 
+@login_required
 def detail(request, r_stock_id):
     try: 
         vehicle = RailVehicle.objects.get(pk=r_stock_id)

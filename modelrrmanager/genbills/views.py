@@ -23,6 +23,7 @@ def index(request):
 new_movement = {}
 
 @csrf_exempt
+@login_required
 def download_movements(request):
     # Parse the request body based on the content type
     if request.content_type == 'application/json':
@@ -50,6 +51,7 @@ def download_movements(request):
     return response
 
 @csrf_exempt
+@login_required
 def generateCarMovement(request):
     # Call the class method to generate a new instance
     new_movement = CarMovements().generate()
@@ -58,6 +60,7 @@ def generateCarMovement(request):
     return JsonResponse({'car_movements_list': new_movement})
 
 @csrf_exempt
+@login_required
 def executeCarMovement(request):
     if request.method == 'POST':
         # send movements to be executed one by one
