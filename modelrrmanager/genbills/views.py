@@ -14,7 +14,7 @@ from layout.models import Layout
 def index(request):
     laynum = 1 # gotta change this
     layout = Layout.objects.get(id=laynum)
-    cars = layout.ListRollingStock()
+    cars = layout.list_rolling_stock()
     context = {
         "RR_summary": "There are currently %s cars on the layout, with %s ready to be lifted" % (len(cars),len(cars)),
     }
@@ -53,8 +53,13 @@ def download_movements(request):
 @csrf_exempt
 @login_required
 def generateCarMovement(request):
+    # just global the layout we'll fix it eventually!
+    layout = 1
+    # we'll let the user pick a date eventually
+    date = '1965-01-05'
+
     # Call the class method to generate a new instance
-    new_movement = CarMovements().generate()
+    new_movement = CarMovements().generate(layout,date)
     
     # Return the updated list as a JSON response
     return JsonResponse({'car_movements_list': new_movement})

@@ -1,50 +1,52 @@
 from django.db import models
-
-import sqlite3
-
-from django.db import models
-from django.utils import timezone
-
 from rollingstock.models import RailVehicle
 
-global_db = 'KitchenerSub.db' # this needs to go
+class Location(models.Model):
+    name = models.CharField(max_length=32)
+    description = models.TextField()
+    macro_location = models.IntegerField
 
-def connection(db):
-    con = sqlite3.connect(db)
-    cur = con.cursor()
-    return cur
-
-class Location:
-    def __init__(self,id,name,description,macro_location):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.macro_location = macro_location
     def __str__(self):
-        return "%s - %s" % (self.name,self.description)
+        return f"{self.name} - {self.description}"
 
 class Layout(models.Model):
-    id = models.CharField(max_length=12,primary_key=True)
+    id = models.CharField(max_length=12, primary_key=True)
     name = models.CharField(max_length=32)
-    locations = {}
-    
-    def ListLocations(self):
-        cur = connection(global_db)
-        cur.execute("SELECT id, name, description, macro_location FROM locations WHERE macro_location = %s" % self.id)
-        locations = {}
-        for location in cur.fetchall():
-            locations[location[0]] = Location(location[0],location[1],location[2],location[3])
-        return locations
-    
-    def ListRollingStock(self):
-        possible_locations = self.ListLocations()
-        lst_of_keys = list(possible_locations.keys())
-        allVehicles = RailVehicle.objects.filter(location__in=lst_of_keys)
-        return list(allVehicles)
-    
-    def ListRollingStockByLocation(self):
-        possible_locations = self.ListLocations()
+    locations = models.ManyToManyField(Location)
+
+    def list_locations(self):
+        return self.locations.all()
+
+    def list_rolling_stock(self):
+        return RailVehicle.objects.filter(location__in=self.locations.all())
+
+    def list_rolling_stock_by_location(self):
         rolling_stock_by_location = {}
-        for location_id in possible_locations:
-            rolling_stock_by_location[location_id] = list(RailVehicle.objects.filter(location=location_id))
+        for location in self.locations.all():
+            rolling_stock_by_location[location.id] = list(RailVehicle.objects.filter(location=location))
         return rolling_stock_by_location
+    
+    def find_destination_for_cargo(self, cargo):
+        layout_id = self.id
+        demands = Demand.objects.filter(location__macro_location=layout_id, cargo=cargo)
+        valid_demands = []
+
+        for demand in demands:
+            if demand.days[day].lower() == 'y' and random.random() <= demand.frequency:
+                valid_demands.append((demand.name, demand.id))
+
+        random.shuffle(valid_demands)
+        return valid_demands[0] if valid_demands else None
+
+class Demand(models.Model):
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    cargo = models.CharField(max_length=32)
+    loaded = models.BooleanField()
+    min_cars = models.PositiveIntegerField()
+    max_cars = models.PositiveIntegerField()
+    name = models.CharField(max_length=32)
+    days = models.CharField(max_length=7)
+    layout = models.ForeignKey(Layout, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
