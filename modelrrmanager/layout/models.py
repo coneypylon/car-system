@@ -1,5 +1,6 @@
 from django.db import models
 from rollingstock.models import RailVehicle
+import random
 
 class Location(models.Model):
     name = models.CharField(max_length=32)
