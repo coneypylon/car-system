@@ -1,4 +1,5 @@
-# Model Railroad Car Waybill Generator
+# Model Rail Waybiller
+## A web app for model railroad car movements
 
 ##### A lightweight Django-based application to generate cards and trains for model railroad ops
 
