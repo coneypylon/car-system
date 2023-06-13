@@ -34,7 +34,7 @@ class CarMovements(models.Model):
         for car in lifts:
             if car.reporting_mark + str(car.id_number) not in used_cars.keys():
                 destination, destination_id = layout.find_destination_for_cargo(car.cargo)
-                used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, destination, destination_id)
+                used_cars[car.reporting_mark + str(car.id_number)] = (car.location, destination, destination_id)
 
         return used_cars
 

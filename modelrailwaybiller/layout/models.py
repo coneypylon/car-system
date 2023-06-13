@@ -29,8 +29,11 @@ class Layout(models.Model):
     
     def find_destination_for_cargo(self, cargo):
         layout_id = self.id
-        demands = Demand.objects.filter(location__macro_location=layout_id, cargo=cargo)
+        demands = Demand.objects.filter(layout_id=layout_id, cargo=cargo)
         valid_demands = []
+
+        # magic number, fix later
+        day = 2
 
         for demand in demands:
             if demand.days[day].lower() == 'y' and random.random() <= demand.frequency:
@@ -45,6 +48,7 @@ class Demand(models.Model):
     loaded = models.BooleanField()
     min_cars = models.PositiveIntegerField()
     max_cars = models.PositiveIntegerField()
+    frequency = models.FloatField()
     name = models.CharField(max_length=32)
     days = models.CharField(max_length=7)
     layout = models.ForeignKey(Layout, on_delete=models.CASCADE)
