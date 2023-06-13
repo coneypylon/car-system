@@ -1,8 +1,5 @@
-# Model Rail Waybiller
-## A web app for model railroad car movements
-
 ![words_sans_bg](https://github.com/coneypylon/car-system/assets/14968474/4f84d8a1-b9f4-4284-bb3a-4335bc4075c6)
-
+## A web app for model railroad car movements
 ##### A lightweight Django-based application to generate cards and trains for model railroad ops
 
 It's obviously a work in progress. So far, it'll generate some simple movements and let you look around at what exists on your layout.
