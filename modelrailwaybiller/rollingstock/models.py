@@ -10,6 +10,7 @@ class RailVehicle(models.Model):
     cargo = models.CharField(max_length=12)
     loaded = models.BooleanField()
     location = models.PositiveIntegerField() # eventually a ForeignKey
+    location_str = models.CharField(max_length=36) # I really need to learn how to reference this
     last_loaded_unloaded = models.PositiveIntegerField() # eventually a ForeignKey
     ready_for_pickup = models.BooleanField()
     img_url = models.URLField()
@@ -24,8 +25,9 @@ class RailVehicle(models.Model):
     def __str__(self):
         return "%s %s - %s (%s)" % (self.reporting_mark,self.id_number,self.aar_type,self.cargo)
 
-    def move(self,location):
+    def move(self,location,location_str):
         self.location = location
+        self.location_str = location_str
 
     def service(self):
         self.last_loaded_unloaded = self.location
