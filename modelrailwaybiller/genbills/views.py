@@ -70,7 +70,6 @@ def executeCarMovement(request):
     if request.method == 'POST':
         # send movements to be executed one by one
         data_dict = QueryDict(request.body)
-        print(data_dict)
         for car_id, values in data_dict.items():
             first_four = car_id[:4]
             last_six = car_id[4:10]

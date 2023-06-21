@@ -37,7 +37,6 @@ class Layout(models.Model):
 
         for demand in demands:
             if demand.days[day].lower() == 'y' and random.random() <= demand.frequency:
-                print(demand)
                 valid_demands.append((demand.name, demand.id))
 
         random.shuffle(valid_demands)
@@ -53,7 +52,6 @@ class Layout(models.Model):
 
         for demand in demands:
             if demand.days[day].lower() == 'y' and random.random() <= demand.frequency:
-                print(demand)
                 valid_demands.append((demand.name, demand.id))
 
         random.shuffle(valid_demands)
