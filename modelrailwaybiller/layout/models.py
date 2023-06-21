@@ -5,13 +5,13 @@ import random
 class Location(models.Model):
     name = models.CharField(max_length=32)
     description = models.TextField()
-    macro_location = models.IntegerField
+    macro_location = models.IntegerField()
 
     def __str__(self):
         return f"{self.name} - {self.description}"
 
 class Layout(models.Model):
-    id = models.CharField(max_length=12, primary_key=True)
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=32)
     locations = models.ManyToManyField(Location)
 
