@@ -18,8 +18,6 @@ class CarMovements(models.Model):
         day = int(datetime.strptime(date, "%Y-%m-%d").strftime('%w'))
         used_cars = {}
 
-        demands = Demand.objects.filter(layout=layout_id, days__contains=day)
-
         # Retrieve rail vehicles associated with the desired layout
         layout_location_ids = Location.objects.filter(layout__id=layout_id).values_list('id', flat=True)
         lifts = RailVehicle.objects.filter(ready_for_pickup=True, location__in=layout_location_ids)
@@ -28,42 +26,27 @@ class CarMovements(models.Model):
         offlayout_location_ids = Location.objects.exclude(layout__id=layout_id).values_list('id', flat=True)
         dropoffs = RailVehicle.objects.filter(ready_for_pickup=True, location__in=offlayout_location_ids)
 
-        for demand in demands:
-            remaining_demand = demand.num_cars
-            for car in lifts:
-                if remaining_demand > 0 and car.reporting_mark + str(car.id_number) not in used_cars.keys() and car.cargo == demand.cargo and car.is_loaded == demand.loaded:
-                    used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, demand.name, demand.id)
-                    remaining_demand -= 1
-
         for car in lifts:
             if car.reporting_mark + str(car.id_number) not in used_cars.keys():
                 try:
-                    destination, destination_id = layout.find_destination_for_cargo(car.cargo,car.loaded)
+                    destination, destination_id = layout.find_destination_for_cargo(car.cargo,car.loaded,day)
                     used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, destination, destination_id)
                 except TypeError:
                     try:
-                        destination, destination_id = layout.find_global_destination_for_cargo(car.cargo,car.loaded)
+                        destination, destination_id = layout.find_global_destination_for_cargo(car.cargo,car.loaded,day)
                         used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, destination, destination_id)
                     except TypeError:
                         pass
         
-        
-
-        for demand in demands:
-            remaining_demand = demand.num_cars
-            for car in dropoffs:
-                if remaining_demand > 0 and car.reporting_mark + str(car.id_number) not in used_cars.keys() and car.cargo == demand.cargo and car.is_loaded == demand.loaded:
-                    used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, demand.name, demand.id)
-                    remaining_demand -= 1
 
         for car in dropoffs:
             if car.reporting_mark + str(car.id_number) not in used_cars.keys():
                 try:
-                    destination, destination_id = layout.find_destination_for_cargo(car.cargo,car.loaded)
+                    destination, destination_id = layout.find_destination_for_cargo(car.cargo,car.loaded,day)
                     used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, destination, destination_id)
                 except TypeError:
                     try:
-                        destination, destination_id = layout.find_global_destination_for_cargo(car.cargo,car.loaded)
+                        destination, destination_id = layout.find_global_destination_for_cargo(car.cargo,car.loaded,day)
                         used_cars[car.reporting_mark + str(car.id_number)] = (car.location_str, destination, destination_id)
                     except TypeError:
                         pass

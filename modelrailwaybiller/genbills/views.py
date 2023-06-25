@@ -12,7 +12,7 @@ from layout.models import Layout
 
 @login_required
 def index(request):
-    laynum = 1 # gotta change this
+    laynum = request.user.layout_id
     layout = Layout.objects.get(id=laynum)
     cars = layout.list_rolling_stock()
     context = {
@@ -53,10 +53,10 @@ def download_movements(request):
 @csrf_exempt
 @login_required
 def generateCarMovement(request):
-    # just global the layout we'll fix it eventually!
-    layout = 1
+    # we fixed it :)
+    layout = request.user.layout_id
     # we'll let the user pick a date eventually
-    date = '1965-01-05'
+    date = '1965-01-06'
 
     # Call the class method to generate a new instance
     new_movement = CarMovements().generate(layout,date)

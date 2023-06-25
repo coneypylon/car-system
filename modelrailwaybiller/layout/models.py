@@ -27,14 +27,10 @@ class Layout(models.Model):
             rolling_stock_by_location[location.id] = list(RailVehicle.objects.filter(location=location.id))
         return rolling_stock_by_location
     
-    def find_destination_for_cargo(self, cargo, loaded):
+    def find_destination_for_cargo(self, cargo, loaded,day):
         layout_id = self.id
         demands = Demand.objects.filter(layout_id=layout_id, cargo=cargo, loaded=loaded)
         valid_demands = []
-
-        # magic number, fix later
-        day = 2
-
         for demand in demands:
             if demand.days[day].lower() == 'y' and random.random() <= demand.frequency:
                 valid_demands.append((demand.name, demand.id))
@@ -42,13 +38,10 @@ class Layout(models.Model):
         random.shuffle(valid_demands)
         return valid_demands[0] if valid_demands else None
     
-    def find_global_destination_for_cargo(self, cargo, loaded):
+    def find_global_destination_for_cargo(self, cargo, loaded,day):
         layout_id = self.id
         demands = Demand.objects.filter(cargo=cargo, loaded=loaded)
         valid_demands = []
-
-        # magic number, fix later
-        day = 2
 
         for demand in demands:
             if demand.days[day].lower() == 'y' and random.random() <= demand.frequency:
