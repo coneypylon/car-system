@@ -2,6 +2,22 @@
   <head>
     <title>Fleet Management</title>
     <style>
+      /* Font */
+      @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+      * {
+        font-size: 100%;
+        font-family: "Open Sans", sans-serif;
+      }
+      /* Font sizes */
+      h1 {
+        font-size: 200%;
+      }
+      h2 {
+        font-size: 150%;
+      }
+      h3 {
+        font-size: 125%;
+      }
       /* Center content */
       body {
         display: flex;
@@ -64,7 +80,10 @@
         border: 1px solid #888;
         border-radius: 15px;
         width: 80%;
-        max-width: 400px;
+        max-width: 800px;
+      }
+      #modalFields {
+        justify-content: right;
       }
       .close {
         color: #aaa;
@@ -79,6 +98,17 @@
         text-decoration: none;
         cursor: pointer;
       }
+        .flex-container {
+          display: flex;
+      }
+      
+      .form-flex-child {
+          flex: 1;
+      }  
+      
+      .form-flex-child:first-child {
+          margin-right: 20px;
+      } 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -123,7 +153,7 @@
             if (xhr.status === 200) {
               // Handle successful form submission
               modal.style.display = 'none';
-              // Optionally update the page content or display a success message
+              location.reload()
             } else {
               // Handle form submission error
               // Display an error message or handle the error gracefully
@@ -144,10 +174,9 @@
     </header>
     <main>
       <h1>Fleet Management</h1>
-      <button type="button" id="openModalButton">Open Modal</button>
+      <button type="button" id="openModalButton">Add new vehicle</button>
 
-      {% include 'rollingstock/submit_modal.html' %}
-
+      
       {% if road_listed_vehicles %}
       <ul>
         {% for vehicle in road_listed_vehicles %}
@@ -161,6 +190,7 @@
       {% else %}
       <p>No vehicles are available</p>
       {% endif %}
+      {% include 'rollingstock/submit_modal.html' %}
     </main>
     <footer>
       <p>&copy; 2023 Nick Boyko</p>

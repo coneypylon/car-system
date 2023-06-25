@@ -1,6 +1,7 @@
 from django.db import models
 from rollingstock.models import RailVehicle
 import random
+from django.conf import settings
 
 class Location(models.Model):
     name = models.CharField(max_length=32)
@@ -13,6 +14,7 @@ class Location(models.Model):
 class Layout(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=32)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     locations = models.ManyToManyField(Location)
 
     def list_locations(self):

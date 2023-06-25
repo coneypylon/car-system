@@ -4,19 +4,11 @@
       <span class="close">&times;</span>
       <div class="flex-container">
         <div id="modalFields" class="form-flex-child">
-          <form id="modalForm" action="/rollingstock/" method="post">
+          <form id="modalForm" action={{ request.path }} method="delete">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Submit">
           </form>
-        </div>
-        <div class="form-flex-child">
-          <h2>Available Locations:</h2>
-          <ul>
-          {% for location in locations %}
-            <li>{{ location.id }} - {{ location.name }}</li>
-            {% endfor %}
-          </ul>
         </div>
     </div>
   </div>

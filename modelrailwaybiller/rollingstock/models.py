@@ -3,13 +3,16 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
+#from layout.models import Location
+
 class RailVehicle(models.Model):
     reporting_mark = models.CharField(max_length=4)
     id_number = models.PositiveIntegerField()
     aar_type = models.CharField(max_length=2)
     cargo = models.CharField(max_length=12)
     loaded = models.BooleanField()
-    location = models.PositiveIntegerField() # eventually a ForeignKey
+    location = models.PositiveIntegerField() 
+    #location = models.ForeignKey(Location)
     location_str = models.CharField(max_length=36) # I really need to learn how to reference this
     last_loaded_unloaded = models.PositiveIntegerField() # eventually a ForeignKey
     ready_for_pickup = models.BooleanField()
