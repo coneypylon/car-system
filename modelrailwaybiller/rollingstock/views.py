@@ -2,6 +2,7 @@ from django.http import Http404,HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
+from .forms import StockForm
 from .models import RailVehicle
 #from modelrrmanager.locations.models import Location
 
@@ -15,6 +16,20 @@ def index(request):
     }
     #return HttpResponse(template.render(context,request))
     return render(request, 'rollingstock/index.html', context)
+
+@login_required
+def get_new_stock(request):
+    # receive da form
+    if request.method == "POST":
+        form = StockForm(request.POST)
+    if form.isvalid():
+        # guess I'm gonna lern how to use form.cleaned_data
+        return HttpResponse("Stock Received!")
+    
+    else:
+        form = StockForm()
+    
+    return render(request, "newstock.html", {"form": form})
 
 @login_required
 def detail(request, r_stock_id):
