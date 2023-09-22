@@ -9,16 +9,29 @@ import csv
 from .models import CarMovements
 from rollingstock.models import RailVehicle
 from layout.models import Layout
+from layout.forms import LayoutForm
 
 @login_required
 def index(request):
     laynum = request.user.layout_id
-    layout = Layout.objects.get(id=laynum)
-    cars = layout.list_rolling_stock()
-    context = {
-        "RR_summary": "There are currently %s cars on the layout, with %s ready to be lifted" % (len(cars),len(cars)),
-    }
-    return render(request, 'genbills/index.html', context)
+    try:
+        layout = Layout.objects.get(id=laynum)
+        cars = layout.list_rolling_stock()
+        # eventually we need to calculate how many are ready to move
+        context = {
+            "RR_summary": "There are currently %s cars on the layout, with %s ready to be lifted" % (len(cars),len(cars)),
+        }
+        return render(request, 'genbills/index.html', context)
+    except:
+        # we gotta make a layout
+        form = LayoutForm()
+        cars = []
+        context = {
+            "RR_summary": "There are currently X cars on the layout, with Y ready to be lifted",
+            "form": form
+        }
+        return render(request, 'genbills/create.html', context)
+    
 
 new_movement = {}
 
@@ -56,7 +69,7 @@ def generateCarMovement(request):
     # we fixed it :)
     layout = request.user.layout_id
     # we'll let the user pick a date eventually
-    date = '1965-01-06'
+    date = '1966-01-06'
 
     # Call the class method to generate a new instance
     new_movement = CarMovements().generate(layout,date)
