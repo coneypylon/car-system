@@ -1,5 +1,5 @@
 from django.http import Http404,HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
@@ -54,7 +54,8 @@ def detail(request, r_stock_id):
             form = ConfirmationForm(request.POST)
             if form.is_valid() and form.cleaned_data['registration'] == vehicle.reporting_mark + str(vehicle.id_number):
                 vehicle.delete()
-                return HttpResponse("Stock Deleted!")
+                response = redirect('/rollingstock/')
+                return response
         else:
             form = ConfirmationForm()
         location = str(vehicle.location_str)
@@ -65,5 +66,6 @@ def detail(request, r_stock_id):
         }
         return render(request, 'rollingstock/detail.html',context)
     except RailVehicle.DoesNotExist:
-        raise Http404("Vehicle does not exist!")
+        response = redirect('/rollingstock/')
+        return response
 
