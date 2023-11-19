@@ -3,7 +3,7 @@
   <span class="close">&times;</span>
   <div class="modal-content">
       <div id="modalFields" class="form-flex-child">
-        <form id="modalForm" action="/layout/location" method="post">
+        <form id="modalForm" action="location" method="post">
           {% csrf_token %}
           {{ form.as_p }}
           <input type="submit" value="Submit">

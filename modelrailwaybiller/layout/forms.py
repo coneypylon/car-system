@@ -1,5 +1,5 @@
 from django import forms
-from .models import Layout
+from .models import Layout, Location
 
 class LayoutForm(forms.ModelForm):
     class Meta:
@@ -8,5 +8,5 @@ class LayoutForm(forms.ModelForm):
 
 class LocationForm(forms.ModelForm):
     class Meta:
-        model = Layout
-        exclude = ["id","locations"]
+        model = Location
+        exclude = ["macro_location"]

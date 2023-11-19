@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import Http404,HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Layout
+from .models import Layout, Location
 from .forms import LayoutForm, LocationForm
 
 @login_required
@@ -37,13 +38,16 @@ def layout(request):
 @login_required
 def location(request):
     if request.method == 'POST':
-        # do something
         # let's make a location
         layout_id = request.user.layout_id
+        layout = get_object_or_404(Layout, id=layout_id)
         form = LocationForm(request.POST)
         if form.is_valid():
-            newlocation = form.save(commit=False)
-            newlocation.save()
+            name = form.cleaned_data["name"]
+            description = form.cleaned_data["description"]
+            new_location = Location.objects.create(name=name, description=description,macro_location=layout_id)
+            layout.locations.add(new_location)
+            return HttpResponse("Location Received!")
     if request.method == 'GET':
         response = redirect('layout')
         return response
