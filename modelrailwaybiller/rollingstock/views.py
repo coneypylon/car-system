@@ -50,7 +50,7 @@ def index(request):
 def detail(request, r_stock_id):
     try: 
         vehicle = RailVehicle.objects.get(pk=r_stock_id)
-        if request.method == "POST":
+        if request.method == "POST": # we are deleting a piece of rolling stock
             form = ConfirmationForm(request.POST)
             if form.is_valid() and form.cleaned_data['registration'] == vehicle.reporting_mark + str(vehicle.id_number):
                 vehicle.delete()
